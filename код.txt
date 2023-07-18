@@ -1,0 +1,23 @@
+-- 1. Посчитать общее количество лайков, которые получили пользователи младше 12 лет
+
+SELECT L.id, P.birthday, COUNT(L.id) FROM likes AS L
+JOIN profiles AS P ON L.user_id = P.user_id
+WHERE TIMESTAMPDIFF(YEAR, P.birthday, curdate()) < 12;
+
+-- 2. Определить кто больше поставил лайков (всего): мужчины или женщины
+
+-- 3. Вывести всех пользователей, которые не отправляли сообщения
+
+SELECT U.firstname, U.lastname FROM users AS U
+JOIN messages AS M
+WHERE U.id = M.id
+AND U.id NOT IN (SELECT M.from_user_id);
+
+
+-- 4. Пусть задан пользователь с id=1. Из всех друзей этого пользователя найдите человека, 
+--    который больше всех написал ему сообщений
+
+SELECT P.user_id, F.initiator_user_id, F.target_user_id FROM profiles AS P
+JOIN friend_requests AS F ON P.user_id = F.initiator_user_id OR P.user_id = F.target_user_id
+WHERE P.user_id = 1 AND F.status = 'approved'
+JOIN messages AS M ON P.user_id = 1 AND P.user_id = M.to_user_id;
